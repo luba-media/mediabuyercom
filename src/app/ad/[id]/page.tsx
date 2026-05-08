@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findAdById, getAllAdIds, NETWORK_LABELS, VERTICAL_LABELS, COUNTRY_NAMES } from "@/lib/data";
@@ -11,14 +12,61 @@ export const dynamicParams = true;
 
 type Params = Promise<{ id: string }>;
 
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { id } = await params;
+  const ad = findAdById(id);
+  if (!ad) return { title: "Ad not found" };
+  const network = NETWORK_LABELS[ad.network] ?? ad.network;
+  const title = ad.title
+    ? `${ad.title.slice(0, 70)} — ${network}`
+    : `${network} ad ${id.slice(0, 8)}`;
+  const description = `${network} native creative · ${ad.advertiser} · ${ad.days_active} days active in ${ad.countries.slice(0, 5).join(", ")}${ad.countries.length > 5 ? "…" : ""}.`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/ad/${id}` },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: ad.thumbnail_src ? [{ url: ad.thumbnail_src }] : undefined,
+    },
+    twitter: {
+      card: ad.thumbnail_src ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: ad.thumbnail_src ? [ad.thumbnail_src] : undefined,
+    },
+  };
+}
+
 export default async function AdPage({ params }: { params: Params }) {
   const { id } = await params;
   const ad = findAdById(id);
   if (!ad) notFound();
 
+  const breadcrumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Spy", item: "/spy" },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: NETWORK_LABELS[ad.network] ?? ad.network,
+        item: `/networks/${ad.network}`,
+      },
+      { "@type": "ListItem", position: 3, name: ad.title || id.slice(0, 8), item: `/ad/${id}` },
+    ],
+  };
+
   return (
     <div className="px-4 sm:px-6 py-6 max-w-6xl mx-auto pb-24">
-      <nav className="text-xs text-muted-foreground mb-4 flex items-center gap-2">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+      />
+      <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground mb-4 flex items-center gap-2">
         <Link href="/spy" className="hover:text-foreground">Spy</Link>
         <span>/</span>
         <Link href={`/networks/${ad.network}`} className="hover:text-foreground">

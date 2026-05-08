@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAds, getNetworks, getVerticals, NETWORK_LABELS, VERTICAL_LABELS, COUNTRY_NAMES } from "@/lib/data";
 import { AdCard } from "@/components/ad-card";
+
+export const metadata: Metadata = {
+  title: "Spy — browse 20,000 native ads",
+  description:
+    "Filter live Taboola, Outbrain, MGID and RevContent creatives by network, vertical, country, ad type and longevity. Sortable, hourly-fresh.",
+  alternates: { canonical: "/spy" },
+};
 
 type SP = Promise<{
   q?: string;

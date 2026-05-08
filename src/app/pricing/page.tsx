@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Pricing — plans for media buyers",
+  description:
+    "Starter, Pro and Agency plans. Cancel anytime. Hourly-fresh native ad data across Taboola, Outbrain, MGID and RevContent.",
+  alternates: { canonical: "/pricing" },
+};
 
 const tiers = [
   {

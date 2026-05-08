@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAds, NETWORK_LABELS, VERTICAL_LABELS } from "@/lib/data";
+
+export const metadata: Metadata = {
+  title: "Trends — momentum across the native corpus",
+  description:
+    "New ads per day, vertical mix, network share, longevity distribution and breakout advertisers.",
+  alternates: { canonical: "/trends" },
+};
 
 export default function TrendsPage() {
   const ads = getAds(30);

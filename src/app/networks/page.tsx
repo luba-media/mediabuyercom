@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getNetworks, NETWORK_LABELS } from "@/lib/data";
+
+export const metadata: Metadata = {
+  title: "Networks — Taboola, Outbrain, MGID, RevContent",
+  description:
+    "Coverage across the four major native ad networks. Top advertisers, ad counts, hourly-fresh.",
+  alternates: { canonical: "/networks" },
+};
 
 export default function NetworksPage() {
   const { networks } = getNetworks();
