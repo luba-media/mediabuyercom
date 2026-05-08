@@ -60,15 +60,19 @@ export default function TrendsPage() {
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           New ads per day
         </h2>
-        <div className="mt-4 flex items-end gap-1 h-32">
+        <div className="mt-4 flex items-end gap-[3px] h-36">
           {days.map(([d, n]) => (
             <div
               key={d}
-              className="flex-1 bg-foreground/70 hover:bg-foreground rounded-sm relative group"
-              style={{ height: `${(n / maxDay) * 100}%` }}
+              className="flex-1 rounded-sm relative group transition-all"
+              style={{
+                height: `${Math.max(2, (n / maxDay) * 100)}%`,
+                background:
+                  "linear-gradient(180deg, rgba(16,185,129,0.95) 0%, rgba(16,185,129,0.55) 100%)",
+              }}
               title={`${d}: ${n}`}
             >
-              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block text-[10px] bg-background border border-border rounded px-1.5 py-0.5 whitespace-nowrap">
+              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block text-[10px] bg-background border border-border rounded px-1.5 py-0.5 whitespace-nowrap shadow-sm z-10">
                 {d}: {n}
               </div>
             </div>
@@ -98,8 +102,15 @@ export default function TrendsPage() {
                     <span>{VERTICAL_LABELS[v] ?? v}</span>
                     <span className="text-muted-foreground tabular-nums">{n} · {pct.toFixed(1)}%</span>
                   </div>
-                  <div className="mt-1 h-1 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-foreground/70" style={{ width: `${pct}%` }} />
+                  <div className="mt-1.5 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${pct}%`,
+                        background:
+                          "linear-gradient(90deg, rgba(59,130,246,0.9), rgba(16,185,129,0.9))",
+                      }}
+                    />
                   </div>
                 </Link>
               );
@@ -124,8 +135,15 @@ export default function TrendsPage() {
                     <span>{NETWORK_LABELS[n] ?? n}</span>
                     <span className="text-muted-foreground tabular-nums">{c} · {pct.toFixed(1)}%</span>
                   </div>
-                  <div className="mt-1 h-1 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-foreground/70" style={{ width: `${pct}%` }} />
+                  <div className="mt-1.5 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${pct}%`,
+                        background:
+                          "linear-gradient(90deg, rgba(59,130,246,0.9), rgba(16,185,129,0.9))",
+                      }}
+                    />
                   </div>
                 </Link>
               );

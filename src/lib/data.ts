@@ -67,8 +67,17 @@ export type Index = {
   per_network: Record<string, number>;
 };
 
+// Process-level cache. Values keyed by relative path; same data file across
+// requests during a single Next process — safe because data is fully static
+// and shipped under public/. SSR cold-start no longer re-parses 100 ad pages.
+const cache = new Map<string, unknown>();
+
 function readJSON<T>(rel: string): T {
-  return JSON.parse(fs.readFileSync(path.join(DATA_DIR, rel), "utf8")) as T;
+  const hit = cache.get(rel);
+  if (hit !== undefined) return hit as T;
+  const v = JSON.parse(fs.readFileSync(path.join(DATA_DIR, rel), "utf8")) as T;
+  cache.set(rel, v);
+  return v;
 }
 
 export function getIndex(): Index {
