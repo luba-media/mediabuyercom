@@ -1,65 +1,153 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getIndex, getNetworks, getVerticals, NETWORK_LABELS, VERTICAL_LABELS } from "@/lib/data";
 
-export default function Home() {
+export default function HomePage() {
+  const idx = getIndex();
+  const { networks } = getNetworks();
+  const { verticals } = getVerticals();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 lg:py-16">
+      <section className="text-center max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/50 text-xs text-muted-foreground mb-6">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          {idx.totals.ads.toLocaleString()} native ads tracked · updated hourly
+        </div>
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]">
+          Native ad intelligence
+          <br />
+          <span className="text-muted-foreground">for performance marketers.</span>
+        </h1>
+        <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
+          Discover winning Taboola, Outbrain, MGID and RevContent campaigns. Filter by network,
+          vertical, country, ad type and longevity. See what is working — right now.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/spy"
+            className="inline-flex items-center px-5 h-11 rounded-md bg-foreground text-background font-medium hover:opacity-90 transition"
+          >
+            Browse the spy
+          </Link>
+          <Link
+            href="/pricing"
+            className="inline-flex items-center px-5 h-11 rounded-md border border-border hover:bg-accent transition"
+          >
+            See pricing
+          </Link>
+        </div>
+        <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto text-sm">
+          <Stat label="Native ads" value={idx.totals.ads.toLocaleString()} />
+          <Stat label="Advertisers" value={idx.totals.advertisers.toLocaleString()} />
+          <Stat label="Networks" value={String(idx.totals.networks)} />
+          <Stat label="Countries" value={String(idx.totals.countries)} />
+        </div>
+      </section>
+
+      <section className="mt-20">
+        <SectionHeader
+          eyebrow="Coverage"
+          title="Every major native ad network"
+          subtitle="One subscription. Hourly crawls. Honest data."
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {networks.map((n) => (
+            <Link
+              key={n.slug}
+              href={`/networks/${n.slug}`}
+              className="border border-border rounded-lg p-5 bg-card hover:border-foreground/40 transition group"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Network
+                </span>
+                <span className="text-xs text-muted-foreground group-hover:text-foreground transition">
+                  →
+                </span>
+              </div>
+              <div className="mt-2 text-xl font-semibold">
+                {NETWORK_LABELS[n.slug] ?? n.label}
+              </div>
+              <div className="mt-3 text-sm text-muted-foreground">
+                {n.ad_count.toLocaleString()} live ads
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-20">
+        <SectionHeader
+          eyebrow="Verticals"
+          title="Sliced by what matters"
+          subtitle="Network, vertical, country, ad type, longevity."
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {verticals.map((v) => (
+            <Link
+              key={v.vertical}
+              href={`/verticals/${v.vertical}`}
+              className="flex items-center justify-between border border-border rounded-md px-4 py-3 hover:bg-accent transition"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <div className="font-medium">{VERTICAL_LABELS[v.vertical] ?? v.vertical}</div>
+              <div className="text-sm text-muted-foreground tabular-nums">
+                {v.ad_count.toLocaleString()}
+              </div>
+            </Link>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="mt-20 border border-border rounded-xl p-8 lg:p-12 bg-card">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Built by media buyers.</h2>
+            <p className="mt-3 text-muted-foreground max-w-2xl">
+              No fluff. No SEO walls of text. Just the freshest native creatives, sortable filters,
+              and the longevity signals you need to bid with confidence.
+            </p>
+          </div>
+          <div className="flex lg:justify-end items-center">
+            <Link
+              href="/spy"
+              className="inline-flex items-center px-5 h-11 rounded-md bg-foreground text-background font-medium hover:opacity-90 transition"
+            >
+              Start exploring →
+            </Link>
+          </div>
         </div>
-      </main>
+      </section>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border border-border rounded-md p-4 bg-card">
+      <div className="text-xl font-semibold tabular-nums">{value}</div>
+      <div className="text-xs text-muted-foreground mt-1">{label}</div>
+    </div>
+  );
+}
+
+function SectionHeader({
+  eyebrow,
+  title,
+  subtitle,
+}: {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-6">
+      <div>
+        <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          {eyebrow}
+        </div>
+        <h2 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+      </div>
     </div>
   );
 }
