@@ -86,25 +86,64 @@ export default async function SpyPage({ searchParams }: { searchParams: SP }) {
     return `/spy${qs ? `?${qs}` : ""}`;
   }
 
+  const activeFilters = [networkFilter, verticalFilter, ccFilter, typeFilter, longevity].filter(
+    Boolean
+  ).length;
+
   return (
     <div className="px-4 sm:px-6 py-6 max-w-7xl mx-auto pb-24">
       <div className="flex items-end justify-between gap-4 mb-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Spy</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {total.toLocaleString()} ads match · sorted by {labelSort(sort)}
+          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
+            Spy
+            <span className="inline-flex items-center gap-1 text-[11px] font-normal text-muted-foreground border border-border rounded-full px-2 py-0.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              live
+            </span>
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1 tabular-nums">
+            <span className="font-semibold text-foreground">{total.toLocaleString()}</span> ads
+            match
+            {activeFilters > 0 && (
+              <>
+                {" "}
+                · {activeFilters} filter{activeFilters > 1 ? "s" : ""}
+                <Link
+                  href="/spy"
+                  className="ml-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
+                >
+                  reset
+                </Link>
+              </>
+            )}{" "}
+            · sorted by {labelSort(sort)}
           </p>
         </div>
         <form action="/spy" role="search" className="flex items-center gap-2 w-full sm:w-auto">
           <label htmlFor="spy-q" className="sr-only">Search ad titles and advertisers</label>
-          <input
-            id="spy-q"
-            name="q"
-            type="search"
-            defaultValue={q}
-            placeholder="Search title, advertiser…"
-            className="bg-muted/60 border border-border rounded-md px-3 h-9 text-sm w-full sm:w-72 outline-none focus:border-foreground/40 focus:bg-muted transition"
-          />
+          <div className="flex items-center gap-2 bg-muted/60 border border-border rounded-md px-3 h-9 text-sm w-full sm:w-80 focus-within:border-foreground/40 focus-within:bg-muted transition">
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-muted-foreground shrink-0"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-3.5-3.5" />
+            </svg>
+            <input
+              id="spy-q"
+              name="q"
+              type="search"
+              defaultValue={q}
+              placeholder="Search title, advertiser…"
+              className="bg-transparent outline-none flex-1 placeholder:text-muted-foreground"
+            />
+          </div>
           {networkFilter && <input type="hidden" name="network" value={networkFilter} />}
           {verticalFilter && <input type="hidden" name="vertical" value={verticalFilter} />}
           {ccFilter && <input type="hidden" name="cc" value={ccFilter} />}
