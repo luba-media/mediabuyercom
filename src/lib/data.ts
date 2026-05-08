@@ -11,6 +11,7 @@ export type Ad = {
   advertiser_slug: string;
   title: string;
   thumbnail: string | null;
+  thumbnail_src?: string | null;
   video_url: string | null;
   countries: string[];
   vertical: string;

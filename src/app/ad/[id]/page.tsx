@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findAdById, getAllAdIds, NETWORK_LABELS, VERTICAL_LABELS, COUNTRY_NAMES } from "@/lib/data";
+import { Thumbnail } from "@/components/thumbnail";
 
 export async function generateStaticParams() {
   return getAllAdIds(120).map(({ id }) => ({ id }));
@@ -14,10 +15,6 @@ export default async function AdPage({ params }: { params: Params }) {
   const { id } = await params;
   const ad = findAdById(id);
   if (!ad) notFound();
-
-  const seed = parseInt(ad.id.slice(0, 6), 16) || 0;
-  const h1 = seed % 360;
-  const h2 = (h1 + 60) % 360;
 
   return (
     <div className="px-4 sm:px-6 py-6 max-w-6xl mx-auto pb-24">
@@ -33,21 +30,13 @@ export default async function AdPage({ params }: { params: Params }) {
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
-          <div
-            className="aspect-[16/9] w-full rounded-lg overflow-hidden border border-border relative"
-            style={{
-              background: `linear-gradient(135deg, hsl(${h1}, 50%, 20%), hsl(${h2}, 60%, 35%))`,
-            }}
-          >
-            <div className="absolute inset-0 flex items-center justify-center text-white/70">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
-              </svg>
-            </div>
-            <div className="absolute top-3 left-3 text-xs font-mono text-white/90 bg-black/40 backdrop-blur px-2 py-1 rounded">
-              {ad.id}
-            </div>
-          </div>
+          <Thumbnail
+            id={ad.id}
+            src={ad.thumbnail_src}
+            adType={ad.ad_type}
+            big
+            className="aspect-[16/9] w-full rounded-lg border border-border"
+          />
 
           <div className="border border-border rounded-lg p-5 bg-card space-y-3">
             <div className="flex items-center gap-2 text-xs">

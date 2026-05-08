@@ -211,10 +211,12 @@ function labelSort(s: string) {
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3 py-1.5 border-b border-border last:border-0">
-      <div className="w-20 shrink-0 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold pt-1.5">
+      <div className="w-16 sm:w-20 shrink-0 text-[10px] sm:text-[11px] uppercase tracking-wider text-muted-foreground font-semibold pt-1.5">
         {label}
       </div>
-      <div className="flex flex-wrap gap-1.5 flex-1">{children}</div>
+      <div className="flex sm:flex-wrap gap-1.5 flex-1 overflow-x-auto thin-scroll -mr-3 pr-3 sm:mr-0 sm:pr-0 sm:overflow-x-visible">
+        {children}
+      </div>
     </div>
   );
 }
@@ -224,7 +226,7 @@ function Chip({ href, active, children }: { href: string; active?: boolean; chil
     <Link
       href={href}
       className={
-        "px-2.5 py-1 rounded-md text-xs border transition " +
+        "px-2.5 py-1 rounded-md text-xs border transition whitespace-nowrap shrink-0 " +
         (active
           ? "bg-foreground text-background border-foreground"
           : "border-border text-muted-foreground hover:text-foreground hover:bg-accent")
