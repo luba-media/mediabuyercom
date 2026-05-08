@@ -95,12 +95,15 @@ export default async function SpyPage({ searchParams }: { searchParams: SP }) {
             {total.toLocaleString()} ads match · sorted by {labelSort(sort)}
           </p>
         </div>
-        <form action="/spy" className="flex items-center gap-2">
+        <form action="/spy" role="search" className="flex items-center gap-2 w-full sm:w-auto">
+          <label htmlFor="spy-q" className="sr-only">Search ad titles and advertisers</label>
           <input
+            id="spy-q"
             name="q"
+            type="search"
             defaultValue={q}
             placeholder="Search title, advertiser…"
-            className="bg-muted/60 border border-border rounded-md px-3 h-9 text-sm w-72 outline-none focus:border-foreground/40"
+            className="bg-muted/60 border border-border rounded-md px-3 h-9 text-sm w-full sm:w-72 outline-none focus:border-foreground/40 focus:bg-muted transition"
           />
           {networkFilter && <input type="hidden" name="network" value={networkFilter} />}
           {verticalFilter && <input type="hidden" name="vertical" value={verticalFilter} />}

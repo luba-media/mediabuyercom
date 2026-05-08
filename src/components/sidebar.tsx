@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SidebarLink } from "./sidebar-link";
 
 const sections: Array<{ heading: string; items: Array<{ href: string; label: string }> }> = [
   {
@@ -41,12 +41,7 @@ export function Sidebar() {
             <ul className="space-y-0.5">
               {s.items.map((it) => (
                 <li key={it.href}>
-                  <Link
-                    href={it.href}
-                    className="block px-2 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition"
-                  >
-                    {it.label}
-                  </Link>
+                  <SidebarLink href={it.href}>{it.label}</SidebarLink>
                 </li>
               ))}
             </ul>
